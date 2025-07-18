@@ -79,7 +79,10 @@ const ItemDetailPage = () => {
       const response = await itemService.getItems({ status: "approved" });
       // Filter out the current item and items not owned by the user
       const filteredItems = response.data.items.filter(
-        (userItem) => userItem._id !== id && userItem.owner._id === user?.id
+        (userItem) =>
+          userItem._id !== id &&
+          userItem.owner &&
+          userItem.owner.clerkId === user?.id
       );
       setUserItems(filteredItems);
     } catch (error) {
@@ -313,9 +316,9 @@ const ItemDetailPage = () => {
                   <p className="font-medium">
                     {item.owner.firstName} {item.owner.lastName}
                   </p>
-                  {/* <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     @{item.owner.username}
-                  </p> */}
+                  </p>
                 </div>
               </div>
             </CardContent>

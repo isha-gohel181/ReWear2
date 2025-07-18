@@ -53,6 +53,8 @@ const createItem = async (req, res) => {
 };
 
 // Get all items with filters
+// Updated getItems function in itemController.js
+
 const getItems = async (req, res) => {
   try {
     const {
@@ -87,7 +89,7 @@ const getItems = async (req, res) => {
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
     const items = await Item.find(query)
-      .populate("owner", "firstName lastName username profileImageUrl")
+      .populate("owner", "firstName lastName username profileImageUrl clerkId") // Added clerkId here
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(parseInt(limit));

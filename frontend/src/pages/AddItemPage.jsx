@@ -1,4 +1,4 @@
-// AddItemPage.jsx - Debug Version with Console Logs and Error Handling
+// AddItemPage.jsx
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -96,7 +96,31 @@ const AddItemPage = () => {
     "Formal",
   ];
 
-  const sizes = ["XS", "S", "M", "L", "XL", "XXL", "2XL", "3XL"];
+  // Category-specific size options
+  const sizesByCategory = {
+    outerwear: ["XS", "S", "M", "L", "XL", "XXL"],
+    tops: ["XS", "S", "M", "L", "XL", "XXL"],
+    bottoms: ["XS", "S", "M", "L", "XL", "XXL"],
+    dresses: ["XS", "S", "M", "L", "XL", "XXL"],
+    activewear: ["XS", "S", "M", "L", "XL", "XXL"],
+    formal: ["XS", "S", "M", "L", "XL", "XXL"],
+    shoes: ["5", "6", "7", "8", "9", "10", "11"],
+    bags: ["Small", "Medium", "Large"],
+    accessories: ["One Size", "Small", "Medium", "Large"],
+    jewelry: ["One Size", "Small", "Medium", "Large"],
+  };
+
+  const selectedCategory = watch("category");
+
+  // Get size options based on selected category
+  const getSizeOptions = () => {
+    if (!selectedCategory) return [];
+    const categoryKey = selectedCategory.toLowerCase();
+    return sizesByCategory[categoryKey] || ["XS", "S", "M", "L", "XL", "XXL"]; // fallback to standard sizes
+  };
+
+  const sizeOptions = getSizeOptions();
+
   const conditions = [
     "New with tags",
     "New without tags",
@@ -531,6 +555,8 @@ const AddItemPage = () => {
                     onValueChange={(value) => {
                       console.log("Category selected:", value);
                       setValue("category", value);
+                      // Reset size when category changes
+                      setValue("size", "");
                     }}
                   >
                     <SelectTrigger>
@@ -574,12 +600,19 @@ const AddItemPage = () => {
                       console.log("Size selected:", value);
                       setValue("size", value);
                     }}
+                    key={selectedCategory} // This will reset the select when category changes
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select size" />
+                      <SelectValue
+                        placeholder={
+                          selectedCategory
+                            ? `Select size for ${selectedCategory.toLowerCase()}`
+                            : "Select category first"
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
-                      {sizes.map((size) => (
+                      {sizeOptions.map((size) => (
                         <SelectItem key={size} value={size}>
                           {size}
                         </SelectItem>
@@ -590,6 +623,11 @@ const AddItemPage = () => {
                     <p className="text-sm text-destructive mt-1 flex items-center">
                       <AlertCircle className="h-3 w-3 mr-1" />
                       {errors.size.message}
+                    </p>
+                  )}
+                  {!selectedCategory && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Please select a category first to see available sizes
                     </p>
                   )}
                 </div>

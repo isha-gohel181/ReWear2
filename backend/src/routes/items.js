@@ -18,9 +18,9 @@ const router = express.Router();
 router.get("/", getItems); // Anyone can browse items
 
 // Auth required routes
-router.post("/", requireAuth, upload.array("images", 5), createItem);
+router.post("/", requireAuth, upload.array("images", 10), createItem);
 router.get("/:id", getItemById);
-router.put("/:id", requireAuth, upload.array("images", 5), updateItem);
+router.put("/:id", requireAuth, upload.array("images", 10), updateItem);
 router.delete("/:id", requireAuth, deleteItem);
 
 // Admin routes

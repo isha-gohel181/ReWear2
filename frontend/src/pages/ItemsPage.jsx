@@ -47,7 +47,21 @@ const ItemsPage = () => {
     "Formal",
     "Other",
   ];
-  const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
+  const sizes = [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "XXL",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+  ];
   const conditions = [
     "New",
     "Like new",

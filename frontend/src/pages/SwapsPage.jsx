@@ -390,9 +390,9 @@ const SwapsPage = () => {
                   {otherUser?.firstName || "Unknown"}{" "}
                   {otherUser?.lastName || "User"}
                 </h3>
-                {/* <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   @{otherUser?.username || "unknown"}
-                </p> */}
+                </p>
               </div>
             </div>
             <div className="flex items-center space-x-2">

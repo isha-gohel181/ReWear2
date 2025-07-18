@@ -263,7 +263,7 @@ const Dashboard = () => {
               <h3 className="text-lg font-semibold">
                 {userProfile?.firstName} {userProfile?.lastName}
               </h3>
-              {/* <p className="text-muted-foreground">@{userProfile?.username}</p> */}
+              <p className="text-muted-foreground">@{userProfile?.username}</p>
               <p className="text-sm text-muted-foreground">
                 Member since {formatDate(userProfile?.createdAt)}
               </p>
