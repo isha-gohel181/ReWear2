@@ -220,7 +220,7 @@ const ItemDetailPage = () => {
               </span>
             </div>
           </div>
-
+ 
           {/* Item Details */}
           <Card>
             <CardHeader>

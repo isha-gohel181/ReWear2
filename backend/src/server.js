@@ -54,11 +54,10 @@ const uploadsPath = path.join(__dirname, "uploads/items");
 app.use(
   "/uploads/items",
   (req, res, next) => {
-    const allowedOrigin = process.env.FRONTEND_URL?.trim();
-
-    if (allowedOrigin) {
-      res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
-    }
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      process.env.FRONTEND_URL || "*"
+    );
     res.setHeader("Access-Control-Allow-Methods", "GET");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     next();

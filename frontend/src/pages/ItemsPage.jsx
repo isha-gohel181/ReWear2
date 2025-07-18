@@ -1,3 +1,4 @@
+//frontend/src/pages/ItemsPage.jsx
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -279,10 +280,9 @@ const ItemsPage = () => {
             <div onClick={() => navigate(`/items/${item._id}`)}>
               <div className="aspect-square relative overflow-hidden rounded-t-lg">
                 <img
-                  src={item.images[0]}
+                  src={`https://rewear-backend-bkya.onrender.com/${item.images[0]}`}
                   alt={item.title}
                   className="w-full h-full object-cover"
-                  crossOrigin="anonymous"
                 />
                 <div className="absolute top-2 right-2">
                   <Badge variant="secondary">{item.condition}</Badge>
