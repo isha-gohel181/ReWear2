@@ -195,9 +195,9 @@ const SwapsPage = () => {
     }
 
     const incoming = swaps.filter((swap) => {
-      console.log("Checking swap:", swap);
-      console.log("Provider clerkId:", swap.provider?.clerkId);
-      console.log("User ID:", user.id);
+      // console.log("Checking swap:", swap);
+      // console.log("Provider clerkId:", swap.provider?.clerkId);
+      // console.log("User ID:", user.id);
       return swap.provider?.clerkId === user.id && swap.status === "pending";
     });
 
@@ -703,14 +703,14 @@ const SwapsPage = () => {
 
       {/* Swaps Tabs */}
       <Tabs defaultValue="incoming" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="incoming">
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 gap-2">
+          <TabsTrigger className="py-2 text-center" value="incoming">
             Incoming Requests ({incoming.length})
           </TabsTrigger>
-          <TabsTrigger value="outgoing">
+          <TabsTrigger className="py-2 text-center" value="outgoing">
             My Requests ({outgoing.length})
           </TabsTrigger>
-          <TabsTrigger value="completed">
+          <TabsTrigger className="py-2 text-center" value="completed">
             Completed ({completed.length})
           </TabsTrigger>
         </TabsList>

@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogContent,
@@ -29,11 +28,6 @@ import {
   Heart,
   Share2,
   MessageSquare,
-  Star,
-  MapPin,
-  Calendar,
-  Package,
-  User,
   Coins,
   RefreshCw,
 } from "lucide-react";
@@ -66,7 +60,6 @@ const ItemDetailPage = () => {
       const response = await itemService.getItemById(id);
       setItem(response.data.item);
     } catch (error) {
-      console.error("Error fetching item:", error);
       toast.error("Failed to load item details");
       navigate("/items");
     } finally {
@@ -77,7 +70,6 @@ const ItemDetailPage = () => {
   const fetchUserItems = async () => {
     try {
       const response = await itemService.getItems({ status: "approved" });
-      // Filter out the current item and items not owned by the user
       const filteredItems = response.data.items.filter(
         (userItem) =>
           userItem._id !== id &&
@@ -104,43 +96,37 @@ const ItemDetailPage = () => {
         message: swapMessage,
         type: "direct_swap",
       });
-
       toast.success("Swap request sent successfully!");
       setSwapDialogOpen(false);
       setSelectedItemId("");
       setSwapMessage("");
     } catch (error) {
-      console.error("Error requesting swap:", error);
       toast.error("Failed to send swap request");
     } finally {
       setSubmitting(false);
     }
   };
 
- const handleRedeem = async () => {
-   setSubmitting(true);
-   try {
-     await swapService.requestSwap({
-       requestedItemId: id,
-       type: "point_redemption", // Changed from "redeem"
-     });
-
-     toast.success("Item redeemed successfully!");
-     setRedeemDialogOpen(false);
-     fetchItem();
-   } catch (error) {
-     console.error("Error redeeming item:", error);
-
-     const errorMessage =
-       error.response?.data?.message ||
-       error.response?.data?.error ||
-       "Failed to redeem item";
-
-     toast.error(errorMessage);
-   } finally {
-     setSubmitting(false);
-   }
- };
+  const handleRedeem = async () => {
+    setSubmitting(true);
+    try {
+      await swapService.requestSwap({
+        requestedItemId: id,
+        type: "point_redemption",
+      });
+      toast.success("Item redeemed successfully!");
+      setRedeemDialogOpen(false);
+      fetchItem();
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to redeem item";
+      toast.error(errorMessage);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const isOwner = item && user && item.owner.clerkId === user.id;
   const canInteract = isSignedIn && !isOwner && item?.status === "approved";
@@ -163,7 +149,7 @@ const ItemDetailPage = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-6 pb-10">
       {/* Back Button */}
       <Button
         variant="ghost"
@@ -174,7 +160,7 @@ const ItemDetailPage = () => {
         Back to Items
       </Button>
 
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Image Gallery */}
         <div className="space-y-4">
           <div className="aspect-square relative overflow-hidden rounded-lg border">
@@ -189,9 +175,8 @@ const ItemDetailPage = () => {
             </div>
           </div>
 
-          {/* Thumbnail Gallery */}
           {item.images.length > 1 && (
-            <div className="flex space-x-2 overflow-x-auto">
+            <div className="flex space-x-2 overflow-x-auto pb-1">
               {item.images.map((image, index) => (
                 <button
                   key={index}
@@ -213,11 +198,11 @@ const ItemDetailPage = () => {
           )}
         </div>
 
-        {/* Item Details */}
+        {/* Item Info Section */}
         <div className="space-y-6">
           <div>
-            <div className="flex items-start justify-between mb-2">
-              <h1 className="text-3xl font-bold">{item.title}</h1>
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-2">
+              <h1 className="text-2xl sm:text-3xl font-bold">{item.title}</h1>
               <div className="flex space-x-2">
                 <Button variant="ghost" size="icon">
                   <Heart className="h-4 w-4" />
@@ -227,7 +212,7 @@ const ItemDetailPage = () => {
                 </Button>
               </div>
             </div>
-            <div className="flex items-center space-x-4 text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
               <Badge variant="outline">{item.status}</Badge>
               <span className="flex items-center">
                 <Coins className="h-4 w-4 mr-1" />
@@ -236,40 +221,34 @@ const ItemDetailPage = () => {
             </div>
           </div>
 
-          {/* Item Specifications */}
+          {/* Item Details */}
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">Item Details</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <span className="text-sm text-muted-foreground">
-                    Category
-                  </span>
+                  <p className="text-sm text-muted-foreground">Category</p>
                   <p className="font-medium">{item.category}</p>
                 </div>
                 <div>
-                  <span className="text-sm text-muted-foreground">Size</span>
+                  <p className="text-sm text-muted-foreground">Size</p>
                   <p className="font-medium">{item.size}</p>
                 </div>
                 <div>
-                  <span className="text-sm text-muted-foreground">Type</span>
+                  <p className="text-sm text-muted-foreground">Type</p>
                   <p className="font-medium">{item.type}</p>
                 </div>
                 <div>
-                  <span className="text-sm text-muted-foreground">
-                    Condition
-                  </span>
+                  <p className="text-sm text-muted-foreground">Condition</p>
                   <p className="font-medium">{item.condition}</p>
                 </div>
               </div>
 
-              {item.tags && item.tags.length > 0 && (
+              {item.tags?.length > 0 && (
                 <div>
-                  <span className="text-sm text-muted-foreground block mb-2">
-                    Tags
-                  </span>
+                  <p className="text-sm text-muted-foreground mb-1">Tags</p>
                   <div className="flex flex-wrap gap-1">
                     {item.tags.map((tag, index) => (
                       <Badge
@@ -304,7 +283,7 @@ const ItemDetailPage = () => {
               <CardTitle className="text-lg">Owner</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center gap-3">
                 <Avatar>
                   <AvatarImage src={item.owner.profileImageUrl} />
                   <AvatarFallback>
@@ -324,7 +303,7 @@ const ItemDetailPage = () => {
             </CardContent>
           </Card>
 
-          {/* Action Buttons */}
+          {/* Interactions */}
           {canInteract && (
             <div className="space-y-3">
               <Dialog open={swapDialogOpen} onOpenChange={setSwapDialogOpen}>
@@ -334,7 +313,7 @@ const ItemDetailPage = () => {
                     Request Swap
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="sm:max-w-md">
                   <DialogHeader>
                     <DialogTitle>Request Item Swap</DialogTitle>
                     <DialogDescription>
@@ -344,7 +323,7 @@ const ItemDetailPage = () => {
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="offered-item">Your Item to Offer</Label>
+                      <Label>Your Item to Offer</Label>
                       <Select
                         value={selectedItemId}
                         onValueChange={setSelectedItemId}
@@ -368,15 +347,14 @@ const ItemDetailPage = () => {
                       </Select>
                     </div>
                     <div>
-                      <Label htmlFor="swap-message">Message (Optional)</Label>
+                      <Label>Message (Optional)</Label>
                       <Textarea
-                        id="swap-message"
                         placeholder="Add a personal message..."
                         value={swapMessage}
                         onChange={(e) => setSwapMessage(e.target.value)}
                       />
                     </div>
-                    <div className="flex space-x-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Button
                         onClick={handleSwapRequest}
                         disabled={submitting || !selectedItemId}
@@ -406,7 +384,7 @@ const ItemDetailPage = () => {
                     Redeem with Points
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="sm:max-w-sm">
                   <DialogHeader>
                     <DialogTitle>Redeem Item with Points</DialogTitle>
                     <DialogDescription>
@@ -414,7 +392,7 @@ const ItemDetailPage = () => {
                       {item.pointValue} points?
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="flex space-x-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Button
                       onClick={handleRedeem}
                       disabled={submitting}

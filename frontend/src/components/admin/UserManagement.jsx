@@ -79,7 +79,7 @@ const UserManagement = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <h2 className="text-2xl font-bold">User Management</h2>
         <Badge variant="secondary">{pagination.total || 0} total users</Badge>
       </div>
@@ -87,9 +87,10 @@ const UserManagement = () => {
       <div className="grid gap-4">
         {users.map((user) => (
           <Card key={user._id}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                {/* Left section - Avatar + Info */}
+                <div className="flex items-center gap-4 w-full md:w-auto">
                   <Avatar className="h-12 w-12">
                     <AvatarImage src={user.profileImageUrl} />
                     <AvatarFallback>
@@ -99,22 +100,23 @@ const UserManagement = () => {
                   </Avatar>
 
                   <div className="space-y-1">
-                    <h3 className="font-semibold">
+                    <h3 className="font-semibold text-base sm:text-lg">
                       {user.firstName} {user.lastName}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground truncate w-48 sm:w-auto">
                       {user.email}
                     </p>
                     {user.username && (
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-muted-foreground truncate w-48 sm:w-auto">
                         @{user.username}
                       </p>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4">
-                  <div className="text-right space-y-1">
+                {/* Right section - Points + Role */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full md:w-auto justify-between">
+                  <div className="text-left sm:text-right space-y-1 w-full sm:w-auto">
                     <div className="flex items-center gap-1 text-sm">
                       <Award className="h-4 w-4" />
                       <span>{user.points} points</span>
@@ -127,9 +129,10 @@ const UserManagement = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
                     <Badge
                       variant={user.role === "admin" ? "default" : "secondary"}
+                      className="text-xs"
                     >
                       <Shield className="h-3 w-3 mr-1" />
                       {user.role}
@@ -142,7 +145,7 @@ const UserManagement = () => {
                       }
                       disabled={updatingRole[user._id]}
                     >
-                      <SelectTrigger className="w-24">
+                      <SelectTrigger className="w-[100px]">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -160,7 +163,7 @@ const UserManagement = () => {
 
       {/* Pagination */}
       {pagination.pages > 1 && (
-        <div className="flex justify-center gap-2">
+        <div className="flex flex-wrap justify-center gap-2">
           {Array.from({ length: pagination.pages }, (_, i) => (
             <Button
               key={i + 1}

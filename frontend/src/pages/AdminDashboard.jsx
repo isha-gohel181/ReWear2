@@ -1,4 +1,4 @@
-//frontend/src/pages/AdminDashboard.jsx
+// frontend/src/pages/AdminDashboard.jsx
 import React from "react";
 import { useUser } from "@clerk/clerk-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -37,21 +37,33 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="text-gray-600 mt-2">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          Admin Dashboard
+        </h1>
+        <p className="text-gray-600 text-sm sm:text-base mt-1">
           Manage items, users, and monitor platform activity
         </p>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="moderation">Item Moderation</TabsTrigger>
-          <TabsTrigger value="users">User Management</TabsTrigger>
-          <TabsTrigger value="activity">Recent Activity</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList className="inline-flex sm:grid sm:grid-cols-4 gap-2 w-max sm:w-full">
+            <TabsTrigger value="overview" className="min-w-[120px]">
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="moderation" className="min-w-[120px]">
+              Item Moderation
+            </TabsTrigger>
+            <TabsTrigger value="users" className="min-w-[120px]">
+              User Management
+            </TabsTrigger>
+            <TabsTrigger value="activity" className="min-w-[120px]">
+              Recent Activity
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="overview" className="space-y-4">
           <AdminStats />

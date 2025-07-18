@@ -251,24 +251,36 @@ const Dashboard = () => {
           <CardTitle>Profile Summary</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center space-x-4">
-            <Avatar className="h-16 w-16">
-              <AvatarImage src={userProfile?.profileImageUrl} />
-              <AvatarFallback className="text-lg">
-                {userProfile?.firstName?.[0]}
-                {userProfile?.lastName?.[0]}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold">
-                {userProfile?.firstName} {userProfile?.lastName}
-              </h3>
-              <p className="text-muted-foreground">@{userProfile?.username}</p>
-              <p className="text-sm text-muted-foreground">
-                Member since {formatDate(userProfile?.createdAt)}
-              </p>
+          <div className="flex flex-col sm:flex-row items-center sm:items-start sm:justify-between gap-4">
+            {/* Avatar & Info */}
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full">
+              <Avatar className="h-16 w-16">
+                <AvatarImage src={userProfile?.profileImageUrl} />
+                <AvatarFallback className="text-lg">
+                  {userProfile?.firstName?.[0]}
+                  {userProfile?.lastName?.[0]}
+                </AvatarFallback>
+              </Avatar>
+
+              <div className="text-center sm:text-left">
+                <h3 className="text-lg font-semibold">
+                  {userProfile?.firstName} {userProfile?.lastName}
+                </h3>
+                <p className="text-muted-foreground">
+                  @{userProfile?.username}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Member since {formatDate(userProfile?.createdAt)}
+                </p>
+              </div>
             </div>
-            <Button variant="outline" onClick={() => navigate("/profile")}>
+
+            {/* Edit Button */}
+            <Button
+              variant="outline"
+              onClick={() => navigate("/profile")}
+              className="w-full sm:w-auto"
+            >
               <Edit className="h-4 w-4 mr-2" />
               Edit Profile
             </Button>
