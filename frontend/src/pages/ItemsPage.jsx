@@ -282,7 +282,8 @@ const ItemsPage = () => {
                 <img
                   src={`https://rewear-backend-bkya.onrender.com/${item.images[0]}`}
                   alt={item.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-48 object-cover rounded"
+                  crossOrigin="anonymous"
                 />
                 <div className="absolute top-2 right-2">
                   <Badge variant="secondary">{item.condition}</Badge>
