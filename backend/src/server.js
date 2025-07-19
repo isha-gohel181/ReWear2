@@ -35,11 +35,10 @@ app.use((req, res, next) => {
   }
 });
 
-
 app.use((req, res, next) => {
   res.setTimeout(10000, () => {
     return res.status(503).json({ error: "Request timeout" });
-  }); 
+  });
   next();
 });
 
@@ -49,22 +48,10 @@ app.use("/api/webhooks", webhookRoutes);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const uploadsPath = path.join(__dirname, "uploads/items");
-
-app.use(
-  "/uploads/items",
-  (req, res, next) => {
-    res.setHeader(
-      "Access-Control-Allow-Origin",
-      process.env.FRONTEND_URL || "*"
-    );
-    res.setHeader("Access-Control-Allow-Methods", "GET");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    next();
-  },
-  express.static(uploadsPath)
-);
-
+// Remove local uploads serving since we're using Cloudinary now
+// The following lines have been removed:
+// const uploadsPath = path.join(__dirname, "uploads/items");
+// app.use("/uploads/items", express.static(uploadsPath));
 
 // Database connection
 mongoose

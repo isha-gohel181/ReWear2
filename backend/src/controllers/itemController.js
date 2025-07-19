@@ -1,8 +1,7 @@
 //src/controllers/itemController.js
 const Item = require("../models/Item");
 const User = require("../models/User");
-const fs = require("fs").promises;
-const path = require("path");
+const { cloudinary } = require("../middleware/upload");
 
 // Create new item
 const createItem = async (req, res) => {
@@ -23,9 +22,8 @@ const createItem = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Handle image files
-    const images =
-      req.files?.map((file) => `/uploads/items/${file.filename}`) || [];
+    // Handle image files - Cloudinary URLs are now available in req.files
+    const images = req.files?.map((file) => file.path) || []; // file.path contains the Cloudinary URL
 
     if (images.length === 0) {
       return res.status(400).json({ error: "At least one image is required" });
@@ -53,8 +51,6 @@ const createItem = async (req, res) => {
 };
 
 // Get all items with filters
-// Updated getItems function in itemController.js
-
 const getItems = async (req, res) => {
   try {
     const {
@@ -89,7 +85,7 @@ const getItems = async (req, res) => {
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
     const items = await Item.find(query)
-      .populate("owner", "firstName lastName username profileImageUrl clerkId") // Added clerkId here
+      .populate("owner", "firstName lastName username profileImageUrl clerkId")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(parseInt(limit));
@@ -159,9 +155,7 @@ const updateItem = async (req, res) => {
 
     // Handle new images if any
     if (req.files && req.files.length > 0) {
-      const newImages = req.files.map(
-        (file) => `/uploads/items/${file.filename}`
-      );
+      const newImages = req.files.map((file) => file.path); // Cloudinary URLs
       updateData.images = [...(item.images || []), ...newImages];
     }
 
@@ -211,6 +205,26 @@ const deleteItem = async (req, res) => {
       return res
         .status(403)
         .json({ error: "Not authorized to delete this item" });
+    }
+
+    // Optional: Delete images from Cloudinary
+    if (item.images && item.images.length > 0) {
+      try {
+        const deletePromises = item.images.map((imageUrl) => {
+          // Extract public_id from Cloudinary URL
+          const urlParts = imageUrl.split("/");
+          const filename = urlParts[urlParts.length - 1];
+          const publicId = `rewear/items/${filename.split(".")[0]}`;
+          return cloudinary.uploader.destroy(publicId);
+        });
+        await Promise.all(deletePromises);
+      } catch (cloudinaryError) {
+        console.error(
+          "Error deleting images from Cloudinary:",
+          cloudinaryError
+        );
+        // Continue with item deletion even if Cloudinary deletion fails
+      }
     }
 
     // Soft delete by setting isActive to false
@@ -264,7 +278,6 @@ const moderateItem = async (req, res) => {
     res.status(500).json({ error: "Failed to moderate item" });
   }
 };
-
 
 module.exports = {
   createItem,

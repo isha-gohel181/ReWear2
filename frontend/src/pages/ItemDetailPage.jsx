@@ -168,7 +168,7 @@ const ItemDetailPage = () => {
               src={item.images[currentImageIndex]}
               alt={item.title}
               className="w-full h-full object-cover"
-              crossOrigin="anonymous"
+              // Remove: crossOrigin="anonymous"
             />
             <div className="absolute top-4 right-4">
               <Badge variant="secondary">{item.condition}</Badge>
@@ -220,7 +220,7 @@ const ItemDetailPage = () => {
               </span>
             </div>
           </div>
- 
+
           {/* Item Details */}
           <Card>
             <CardHeader>
