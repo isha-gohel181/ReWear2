@@ -40,7 +40,7 @@ const itemSchema = new mongoose.Schema(
     condition: {
       type: String,
       required: true,
-      enum: ["New", "Like new", "Good", "Very good", "Fair", "Worn","New Without Tags", "New With Tags"],
+      enum: ["New", "Like new", "Good", "Very good", "Fair", "Worn","New without tags", "New with tags"],
     },
     images: [
       {
