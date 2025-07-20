@@ -63,7 +63,7 @@ const Dashboard = () => {
 
       // Fetch user's items
       const itemsResponse = await itemService.getItems({
-        owner: profileResponse.data.user._id,
+        userId: user.id,
       });
       setUserItems(itemsResponse.data.items);
 
