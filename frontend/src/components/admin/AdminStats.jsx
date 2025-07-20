@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Users, Package, ArrowUpDown, Clock } from "lucide-react";
+import Loader from "@/components/shared/Loader";
 
 const AdminStats = () => {
   const { getToken } = useAuth();
@@ -39,7 +40,7 @@ const AdminStats = () => {
   };
 
   if (loading) {
-    return <div className="text-center py-8">Loading statistics...</div>;
+    return <Loader/>;
   }
 
   if (error) {

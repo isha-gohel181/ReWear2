@@ -30,6 +30,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
+import Loader from "@/components/shared/Loader";
 
 const ItemModerationList = () => {
   const { getToken } = useAuth();
@@ -111,7 +112,7 @@ const ItemModerationList = () => {
   };
 
   if (loading) {
-    return <div className="text-center py-8">Loading pending items...</div>;
+    return <Loader/>;
   }
 
   return (

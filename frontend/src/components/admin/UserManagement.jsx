@@ -20,7 +20,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { User, Calendar, Award, Shield } from "lucide-react";
+import Loader from "@/components/shared/Loader";
 import { toast } from "sonner";
+
 
 const UserManagement = () => {
   const { getToken } = useAuth();
@@ -74,7 +76,7 @@ const UserManagement = () => {
   };
 
   if (loading) {
-    return <div className="text-center py-8">Loading users...</div>;
+    return <Loader/>;
   }
 
   return (

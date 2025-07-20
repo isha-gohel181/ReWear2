@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Package, ArrowUpDown } from "lucide-react";
 import { adminService } from "@/lib/apiServices";
+import Loader from "@/components/shared/Loader";
 
 const RecentActivity = () => {
   const [activity, setActivity] = useState({ items: [], swaps: [] });
@@ -32,7 +33,7 @@ const RecentActivity = () => {
   }, []);
 
   if (loading) {
-    return <div className="text-center py-8">Loading recent activity...</div>;
+    return <Loader/>;
   }
 
   return (

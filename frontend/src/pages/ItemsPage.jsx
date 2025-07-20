@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Filter, Plus } from "lucide-react";
 import { itemService } from "@/lib/apiServices";
 import { toast } from "sonner";
+import Loader from "@/components/shared/Loader";
 
 const ItemsPage = () => {
   const navigate = useNavigate();
@@ -155,11 +156,7 @@ const ItemsPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg">Loading items...</div>
-      </div>
-    );
+    return <Loader/>;
   }
 
   return (

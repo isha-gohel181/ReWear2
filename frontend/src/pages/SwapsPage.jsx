@@ -23,6 +23,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import Loader from "@/components/shared/Loader";
 import {
   RefreshCw,
   MessageSquare,
@@ -219,11 +220,7 @@ const SwapsPage = () => {
   const { incoming, outgoing, completed } = categorizeSwaps();
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg">Loading swaps...</div>
-      </div>
-    );
+    return <Loader/>;
   }
 
   const ItemDisplay = ({ item, label }) => {

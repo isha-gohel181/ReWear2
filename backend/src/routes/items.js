@@ -9,6 +9,7 @@ const {
   updateItem,
   deleteItem,
   moderateItem,
+  // getMyItems,
 } = require("../controllers/itemController");
 const { isAdmin } = require("../controllers/adminController");
 
@@ -19,6 +20,7 @@ router.get("/", getItems); // Anyone can browse items
 
 // Auth required routes
 router.post("/", requireAuth, upload.array("images", 10), createItem);
+// router.get("/my-items", requireAuth, getMyItems);
 router.get("/:id", getItemById);
 router.put("/:id", requireAuth, upload.array("images", 10), updateItem);
 router.delete("/:id", requireAuth, deleteItem);

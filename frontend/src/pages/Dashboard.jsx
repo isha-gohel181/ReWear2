@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import Loader from "@/components/shared/Loader";
 import {
   Plus,
   Package,
@@ -147,11 +148,7 @@ const Dashboard = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg">Loading dashboard...</div>
-      </div>
-    );
+    return <Loader />;
   }
 
   return (

@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import Loader from "@/components/shared/Loader";
 import { userService } from "@/lib/apiServices";
 import {
   User,
@@ -160,11 +161,7 @@ const ProfilePage = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin" />
-      </div>
-    );
+    return <Loader/>;
   }
 
   return (

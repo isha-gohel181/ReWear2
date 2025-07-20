@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import Loader from "@/components/shared/Loader";
 import {
   ArrowLeft,
   Heart,
@@ -132,11 +133,7 @@ const ItemDetailPage = () => {
   const canInteract = isSignedIn && !isOwner && item?.status === "approved";
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg">Loading item details...</div>
-      </div>
-    );
+    return <Loader/>;
   }
 
   if (!item) {

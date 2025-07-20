@@ -61,9 +61,20 @@ const getItems = async (req, res) => {
       page = 1,
       limit = 10,
       status = "approved",
+      userId,
     } = req.query;
 
     const query = { isActive: true };
+
+        // 🧑‍⚖️ Filter by item owner if userId is provided
+    if (userId) {
+      const user = await User.findOne({ clerkId: userId });
+      if (user) {
+        query.owner = user._id;
+      } else {
+        return res.status(404).json({ error: "User not found for userId" });
+      }
+    }
 
     // Only admins can see pending/rejected items in the main listing
     const user = await User.findOne({ clerkId: req.auth?.userId });
@@ -279,6 +290,25 @@ const moderateItem = async (req, res) => {
   }
 };
 
+// const getMyItems = async (req, res) => {
+//   try {
+//     const user = await User.findOne({ clerkId: req.auth.userId });
+
+//     if (!user) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+
+//     const items = await Item.find({ owner: user._id })
+//       .sort({ createdAt: -1 })
+//       .populate("owner", "firstName lastName username profileImageUrl");
+
+//     res.json({ items });
+//   } catch (error) {
+//     console.error("Error fetching user's items:", error);
+//     res.status(500).json({ error: "Failed to fetch user items" });
+//   }
+// };
+
 module.exports = {
   createItem,
   getItems,
@@ -286,4 +316,5 @@ module.exports = {
   updateItem,
   deleteItem,
   moderateItem,
+  // getMyItems,
 };
