@@ -10,6 +10,7 @@ import LandingPage from "./pages/LandingPage";
 import ItemsPage from "./pages/ItemsPage";
 import ItemDetailPage from "./pages/ItemDetailPage";
 import AddItemPage from "./pages/AddItemPage";
+import EditItemPage from "./pages/EditItemPage";
 import SwapsPage from "./pages/SwapsPage";
 import Dashboard from "./pages/Dashboard";
 import ProfilePage from "@/pages/ProfilePage";
@@ -35,6 +36,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <AddItemPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/items/:id/edit"
+              element={
+                <ProtectedRoute>
+                  <EditItemPage />
                 </ProtectedRoute>
               }
             />
@@ -70,7 +79,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
             <Route
               path="/liked"
               element={

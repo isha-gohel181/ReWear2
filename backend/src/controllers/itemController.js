@@ -122,8 +122,8 @@ const getItems = async (req, res) => {
 const getItemById = async (req, res) => {
   try {
     const item = await Item.findById(req.params.id)
-      .populate("owner", "firstName lastName username profileImageUrl")
-      .populate("likes", "firstName lastName username"); // NEW: Populate likes
+      .populate("owner", "firstName lastName username profileImageUrl clerkId")
+      .populate("likes", "firstName lastName username"); // Populate likes
 
     if (!item) {
       return res.status(404).json({ error: "Item not found" });
@@ -136,7 +136,7 @@ const getItemById = async (req, res) => {
   }
 };
 
-// 👍 NEW: Get user's liked items
+// Get user's liked items
 const getUserLikedItems = async (req, res) => {
   try {
     const user = await User.findOne({ clerkId: req.auth.userId });
@@ -224,18 +224,65 @@ const updateItem = async (req, res) => {
         .json({ error: "Not authorized to update this item" });
     }
 
+    // Handle removed images
+    let finalImages = [...item.images];
+    if (updateData.removedImages) {
+      try {
+        const removedImageUrls = JSON.parse(updateData.removedImages);
+        finalImages = finalImages.filter(
+          (url) => !removedImageUrls.includes(url)
+        );
+
+        //Delete removed images from Cloudinary
+        for (const imageUrl of removedImageUrls) {
+          try {
+            const urlParts = imageUrl.split("/");
+            const filename = urlParts[urlParts.length - 1];
+            const publicId = `rewear/items/${filename.split(".")[0]}`;
+            await cloudinary.uploader.destroy(publicId);
+          } catch (cloudinaryError) {
+            console.error(
+              "Error deleting image from Cloudinary:",
+              cloudinaryError
+            );
+            // Continue even if Cloudinary deletion fails
+          }
+        }
+      } catch (error) {
+        console.error("Error processing removed images:", error);
+      }
+    }
+
     // Handle new images if any
     if (req.files && req.files.length > 0) {
       const newImages = req.files.map((file) => file.path); // Cloudinary URLs
-      updateData.images = [...(item.images || []), ...newImages];
+      finalImages = [...finalImages, ...newImages];
     }
+
+    // Ensure we don't exceed the limit
+    if (finalImages.length > 6) {
+      return res.status(400).json({ error: "Maximum 6 images allowed" });
+    }
+
+    // Ensure at least one image remains
+    if (finalImages.length === 0) {
+      return res.status(400).json({ error: "At least one image is required" });
+    }
+
+    updateData.images = finalImages;
 
     // Handle tags if provided as a string
     if (updateData.tags && typeof updateData.tags === "string") {
-      updateData.tags = updateData.tags.split(",").map((tag) => tag.trim());
+      updateData.tags = updateData.tags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag);
     }
 
-    // If not an admin and item was approved, set status back to pending
+    // Remove removedImages from updateData as it's not part of the schema
+    delete updateData.removedImages;
+
+    // If not an admin and item was approved, set status back to pending for re-review
     if (user.role !== "admin" && item.status === "approved") {
       updateData.status = "pending";
     }
