@@ -278,7 +278,7 @@ const deleteItem = async (req, res) => {
         .json({ error: "Not authorized to delete this item" });
     }
 
-    // Optional: Delete images from Cloudinary
+    // Delete images from Cloudinary
     if (item.images && item.images.length > 0) {
       try {
         const deletePromises = item.images.map((imageUrl) => {
@@ -350,7 +350,7 @@ const moderateItem = async (req, res) => {
   }
 };
 
-// 👍 Like/Unlike item
+// Like/Unlike item
 const toggleLikeItem = async (req, res) => {
   try {
     const itemId = req.params.id;
@@ -390,7 +390,7 @@ const toggleLikeItem = async (req, res) => {
   }
 };
 
-// 📤 Share item (increment share count)
+// Share item (increment share count)
 const shareItem = async (req, res) => {
   try {
     const itemId = req.params.id;
@@ -418,7 +418,7 @@ module.exports = {
   createItem,
   getItems,
   getItemById,
-  getUserLikedItems, // NEW
+  getUserLikedItems,
   updateItem,
   deleteItem,
   moderateItem,

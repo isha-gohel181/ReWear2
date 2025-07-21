@@ -6,7 +6,7 @@ const {
   createItem,
   getItems,
   getItemById,
-  getUserLikedItems, // NEW
+  getUserLikedItems,
   updateItem,
   deleteItem,
   moderateItem,
@@ -26,7 +26,7 @@ router.get("/:id", getItemById);
 router.put("/:id", requireAuth, upload.array("images", 10), updateItem);
 router.delete("/:id", requireAuth, deleteItem);
 
-// 👍 NEW: Liked items route
+// Liked items route
 router.get("/user/liked", requireAuth, getUserLikedItems);
 
 // Like/Unlike routes

@@ -81,7 +81,6 @@ const itemSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    // 👍 NEW: Like functionality
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -92,7 +91,6 @@ const itemSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    // 📤 NEW: Share functionality (optional tracking)
     shareCount: {
       type: Number,
       default: 0,
@@ -105,6 +103,6 @@ const itemSchema = new mongoose.Schema(
 itemSchema.index({ category: 1 });
 itemSchema.index({ status: 1 });
 itemSchema.index({ owner: 1 });
-itemSchema.index({ likes: 1 }); // NEW: Index for likes
+itemSchema.index({ likes: 1 }); 
 
 module.exports = mongoose.model("Item", itemSchema);

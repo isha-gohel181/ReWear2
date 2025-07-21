@@ -159,7 +159,6 @@ const Header = () => {
                   <DropdownMenuItem onClick={() => navigate("/swaps")}>
                     <MessageSquare className="mr-2 h-4 w-4" /> My Swaps
                   </DropdownMenuItem>
-                  {/* 💖 NEW: Liked Items in dropdown */}
                   <DropdownMenuItem onClick={() => navigate("/liked")}>
                     <Heart className="mr-2 h-4 w-4" /> Liked Items
                   </DropdownMenuItem>

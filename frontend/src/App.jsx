@@ -14,7 +14,7 @@ import SwapsPage from "./pages/SwapsPage";
 import Dashboard from "./pages/Dashboard";
 import ProfilePage from "@/pages/ProfilePage";
 import AdminDashboard from "./pages/AdminDashboard";
-import LikedItemsPage from "./pages/LikedItemsPage"; // NEW
+import LikedItemsPage from "./pages/LikedItemsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -70,7 +70,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* 💖 NEW: Liked Items route */}
+
             <Route
               path="/liked"
               element={
