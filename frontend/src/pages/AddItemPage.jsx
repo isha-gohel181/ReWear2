@@ -1,4 +1,4 @@
-  // AddItemPage.jsx
+  // forntend/src/pages/AddItemPage.jsx
 
   import React, { useState } from "react";
   import { useNavigate } from "react-router-dom";
