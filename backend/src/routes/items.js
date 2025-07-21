@@ -9,7 +9,8 @@ const {
   updateItem,
   deleteItem,
   moderateItem,
-  // getMyItems,
+  toggleLikeItem, // NEW
+  shareItem, // NEW
 } = require("../controllers/itemController");
 const { isAdmin } = require("../controllers/adminController");
 
@@ -20,10 +21,15 @@ router.get("/", getItems); // Anyone can browse items
 
 // Auth required routes
 router.post("/", requireAuth, upload.array("images", 10), createItem);
-// router.get("/my-items", requireAuth, getMyItems);
 router.get("/:id", getItemById);
 router.put("/:id", requireAuth, upload.array("images", 10), updateItem);
 router.delete("/:id", requireAuth, deleteItem);
+
+// 👍 NEW: Like/Unlike routes
+router.post("/:id/like", requireAuth, toggleLikeItem);
+
+// 📤 NEW: Share routes (public - no auth required for share tracking)
+router.post("/:id/share", shareItem);
 
 // Admin routes
 router.post("/moderate", requireAuth, isAdmin, moderateItem);

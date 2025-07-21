@@ -66,7 +66,7 @@ const getItems = async (req, res) => {
 
     const query = { isActive: true };
 
-        // 🧑‍⚖️ Filter by item owner if userId is provided
+    // 🧑‍⚖️ Filter by item owner if userId is provided
     if (userId) {
       const user = await User.findOne({ clerkId: userId });
       if (user) {
@@ -95,13 +95,13 @@ const getItems = async (req, res) => {
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
+    const total = await Item.countDocuments(query);
+
     const items = await Item.find(query)
       .populate("owner", "firstName lastName username profileImageUrl clerkId")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(parseInt(limit));
-
-    const total = await Item.countDocuments(query);
 
     res.json({
       items,
@@ -121,10 +121,9 @@ const getItems = async (req, res) => {
 // Get item by ID
 const getItemById = async (req, res) => {
   try {
-    const item = await Item.findById(req.params.id).populate(
-      "owner",
-      "firstName lastName username profileImageUrl"
-    );
+    const item = await Item.findById(req.params.id)
+      .populate("owner", "firstName lastName username profileImageUrl")
+      .populate("likes", "firstName lastName username"); // NEW: Populate likes
 
     if (!item) {
       return res.status(404).json({ error: "Item not found" });
@@ -290,24 +289,69 @@ const moderateItem = async (req, res) => {
   }
 };
 
-// const getMyItems = async (req, res) => {
-//   try {
-//     const user = await User.findOne({ clerkId: req.auth.userId });
+// 👍 NEW: Like/Unlike item
+const toggleLikeItem = async (req, res) => {
+  try {
+    const itemId = req.params.id;
+    const user = await User.findOne({ clerkId: req.auth.userId });
 
-//     if (!user) {
-//       return res.status(404).json({ error: "User not found" });
-//     }
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-//     const items = await Item.find({ owner: user._id })
-//       .sort({ createdAt: -1 })
-//       .populate("owner", "firstName lastName username profileImageUrl");
+    const item = await Item.findById(itemId);
+    if (!item) {
+      return res.status(404).json({ error: "Item not found" });
+    }
 
-//     res.json({ items });
-//   } catch (error) {
-//     console.error("Error fetching user's items:", error);
-//     res.status(500).json({ error: "Failed to fetch user items" });
-//   }
-// };
+    const isLiked = item.likes.includes(user._id);
+
+    if (isLiked) {
+      // Unlike: Remove user from likes array
+      item.likes = item.likes.filter((like) => !like.equals(user._id));
+      item.likeCount = Math.max(0, item.likeCount - 1);
+    } else {
+      // Like: Add user to likes array
+      item.likes.push(user._id);
+      item.likeCount += 1;
+    }
+
+    await item.save();
+
+    res.json({
+      message: isLiked ? "Item unliked" : "Item liked",
+      isLiked: !isLiked,
+      likeCount: item.likeCount,
+    });
+  } catch (error) {
+    console.error("Error toggling like:", error);
+    res.status(500).json({ error: "Failed to toggle like" });
+  }
+};
+
+// 📤 NEW: Share item (increment share count)
+const shareItem = async (req, res) => {
+  try {
+    const itemId = req.params.id;
+
+    const item = await Item.findById(itemId);
+    if (!item) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+
+    // Increment share count
+    item.shareCount += 1;
+    await item.save();
+
+    res.json({
+      message: "Item shared successfully",
+      shareCount: item.shareCount,
+    });
+  } catch (error) {
+    console.error("Error sharing item:", error);
+    res.status(500).json({ error: "Failed to share item" });
+  }
+};
 
 module.exports = {
   createItem,
@@ -316,5 +360,6 @@ module.exports = {
   updateItem,
   deleteItem,
   moderateItem,
-  // getMyItems,
+  toggleLikeItem, // NEW
+  shareItem, // NEW
 };

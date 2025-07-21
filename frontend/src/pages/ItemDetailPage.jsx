@@ -1,4 +1,3 @@
-//frontend/src/pages/ItemDetailPage.jsx
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
@@ -49,6 +48,11 @@ const ItemDetailPage = () => {
   const [swapMessage, setSwapMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // 👍 NEW: Like states
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [likePending, setLikePending] = useState(false);
+
   useEffect(() => {
     fetchItem();
     if (isSignedIn) {
@@ -59,7 +63,18 @@ const ItemDetailPage = () => {
   const fetchItem = async () => {
     try {
       const response = await itemService.getItemById(id);
-      setItem(response.data.item);
+      const itemData = response.data.item;
+      setItem(itemData);
+
+      // 👍 NEW: Set like state
+      setLikeCount(itemData.likeCount || 0);
+      if (isSignedIn && user && itemData.likes) {
+        // Check if current user has liked this item
+        const userLiked = itemData.likes.some((like) =>
+          typeof like === "object" ? like.clerkId === user.id : false
+        );
+        setIsLiked(userLiked);
+      }
     } catch (error) {
       toast.error("Failed to load item details");
       navigate("/items");
@@ -80,6 +95,67 @@ const ItemDetailPage = () => {
       setUserItems(filteredItems);
     } catch (error) {
       console.error("Error fetching user items:", error);
+    }
+  };
+
+  // 👍 NEW: Handle like toggle
+  const handleLikeToggle = async () => {
+    if (!isSignedIn) {
+      toast.error("Please sign in to like items");
+      return;
+    }
+
+    if (likePending) return;
+
+    setLikePending(true);
+    try {
+      const response = await itemService.toggleLike(id);
+      setIsLiked(response.data.isLiked);
+      setLikeCount(response.data.likeCount);
+      toast.success(response.data.message);
+    } catch (error) {
+      toast.error("Failed to update like");
+    } finally {
+      setLikePending(false);
+    }
+  };
+
+  // 📤 NEW: Handle share
+  const handleShare = async () => {
+    const shareData = {
+      title: item.title,
+      text: `Check out this ${item.category.toLowerCase()} on ReWear!`,
+      url: window.location.href,
+    };
+
+    try {
+      // Try using Web Share API first (mobile/modern browsers)
+      if (
+        navigator.share &&
+        navigator.canShare &&
+        navigator.canShare(shareData)
+      ) {
+        await navigator.share(shareData);
+        // Track share in backend
+        await itemService.shareItem(id);
+        toast.success("Item shared successfully!");
+      } else {
+        // Fallback: Copy to clipboard
+        await navigator.clipboard.writeText(window.location.href);
+        // Track share in backend
+        await itemService.shareItem(id);
+        toast.success("Link copied to clipboard!");
+      }
+    } catch (error) {
+      // Final fallback: Just copy to clipboard
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        await itemService.shareItem(id);
+        toast.success("Link copied to clipboard!");
+      } catch (clipboardError) {
+        console.error("Share failed:", error);
+        toast.error("Failed to share item");
+      }
     }
   };
 
@@ -133,7 +209,7 @@ const ItemDetailPage = () => {
   const canInteract = isSignedIn && !isOwner && item?.status === "approved";
 
   if (loading) {
-    return <Loader/>;
+    return <Loader />;
   }
 
   if (!item) {
@@ -165,7 +241,6 @@ const ItemDetailPage = () => {
               src={item.images[currentImageIndex]}
               alt={item.title}
               className="w-full h-full object-cover"
-              // Remove: crossOrigin="anonymous"
             />
             <div className="absolute top-4 right-4">
               <Badge variant="secondary">{item.condition}</Badge>
@@ -201,10 +276,25 @@ const ItemDetailPage = () => {
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-2">
               <h1 className="text-2xl sm:text-3xl font-bold">{item.title}</h1>
               <div className="flex space-x-2">
-                <Button variant="ghost" size="icon">
-                  <Heart className="h-4 w-4" />
+                {/* 👍 NEW: Working Like Button */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleLikeToggle}
+                  disabled={likePending}
+                  className={`${
+                    isLiked
+                      ? "text-red-500 hover:text-red-600"
+                      : "text-gray-500 hover:text-red-500"
+                  } transition-colors`}
+                >
+                  <Heart
+                    className={`h-4 w-4 ${isLiked ? "fill-current" : ""}`}
+                  />
                 </Button>
-                <Button variant="ghost" size="icon">
+
+                {/* 📤 NEW: Working Share Button */}
+                <Button variant="ghost" size="icon" onClick={handleShare}>
                   <Share2 className="h-4 w-4" />
                 </Button>
               </div>
@@ -215,6 +305,13 @@ const ItemDetailPage = () => {
                 <Coins className="h-4 w-4 mr-1" />
                 {item.pointValue} points
               </span>
+              {/* 👍 NEW: Like count display */}
+              {likeCount > 0 && (
+                <span className="flex items-center text-sm">
+                  <Heart className="h-3 w-3 mr-1" />
+                  {likeCount} {likeCount === 1 ? "like" : "likes"}
+                </span>
+              )}
             </div>
           </div>
 

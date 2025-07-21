@@ -29,6 +29,10 @@ export const itemService = {
     }),
   deleteItem: (id) => api.delete(`/items/${id}`),
   moderateItem: (data) => api.post("/items/moderate", data),
+  // 👍 NEW: Like functionality
+  toggleLike: (id) => api.post(`/items/${id}/like`),
+  // 📤 NEW: Share functionality
+  shareItem: (id) => api.post(`/items/${id}/share`),
 };
 
 // 🔁 Swap Services

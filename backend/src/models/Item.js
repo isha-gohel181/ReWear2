@@ -40,7 +40,16 @@ const itemSchema = new mongoose.Schema(
     condition: {
       type: String,
       required: true,
-      enum: ["New", "Like new", "Good", "Very good", "Fair", "Worn","New without tags", "New with tags"],
+      enum: [
+        "New",
+        "Like new",
+        "Good",
+        "Very good",
+        "Fair",
+        "Worn",
+        "New without tags",
+        "New with tags",
+      ],
     },
     images: [
       {
@@ -72,6 +81,22 @@ const itemSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    // 👍 NEW: Like functionality
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    likeCount: {
+      type: Number,
+      default: 0,
+    },
+    // 📤 NEW: Share functionality (optional tracking)
+    shareCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
@@ -80,5 +105,6 @@ const itemSchema = new mongoose.Schema(
 itemSchema.index({ category: 1 });
 itemSchema.index({ status: 1 });
 itemSchema.index({ owner: 1 });
+itemSchema.index({ likes: 1 }); // NEW: Index for likes
 
 module.exports = mongoose.model("Item", itemSchema);

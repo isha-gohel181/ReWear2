@@ -1,5 +1,4 @@
   // forntend/src/pages/AddItemPage.jsx
-
   import React, { useState } from "react";
   import { useNavigate } from "react-router-dom";
   import { useUser } from "@clerk/clerk-react";
