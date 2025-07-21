@@ -95,13 +95,13 @@ const getItems = async (req, res) => {
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    const total = await Item.countDocuments(query);
-
     const items = await Item.find(query)
       .populate("owner", "firstName lastName username profileImageUrl clerkId")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(parseInt(limit));
+
+    const total = await Item.countDocuments(query);
 
     res.json({
       items,
@@ -133,6 +133,67 @@ const getItemById = async (req, res) => {
   } catch (error) {
     console.error("Error getting item:", error);
     res.status(500).json({ error: "Failed to get item" });
+  }
+};
+
+// 👍 NEW: Get user's liked items
+const getUserLikedItems = async (req, res) => {
+  try {
+    const user = await User.findOne({ clerkId: req.auth.userId });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const {
+      category,
+      size,
+      condition,
+      search,
+      page = 1,
+      limit = 12,
+    } = req.query;
+
+    // Base query: items liked by the current user
+    const query = {
+      likes: user._id,
+      isActive: true,
+      status: "approved",
+    };
+
+    // Apply filters
+    if (category) query.category = category;
+    if (size) query.size = size;
+    if (condition) query.condition = condition;
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { tags: { $in: [new RegExp(search, "i")] } },
+      ];
+    }
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const items = await Item.find(query)
+      .populate("owner", "firstName lastName username profileImageUrl clerkId")
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    const total = await Item.countDocuments(query);
+
+    res.json({
+      items,
+      pagination: {
+        total,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        pages: Math.ceil(total / parseInt(limit)),
+      },
+    });
+  } catch (error) {
+    console.error("Error getting liked items:", error);
+    res.status(500).json({ error: "Failed to get liked items" });
   }
 };
 
@@ -289,7 +350,7 @@ const moderateItem = async (req, res) => {
   }
 };
 
-// 👍 NEW: Like/Unlike item
+// 👍 Like/Unlike item
 const toggleLikeItem = async (req, res) => {
   try {
     const itemId = req.params.id;
@@ -329,7 +390,7 @@ const toggleLikeItem = async (req, res) => {
   }
 };
 
-// 📤 NEW: Share item (increment share count)
+// 📤 Share item (increment share count)
 const shareItem = async (req, res) => {
   try {
     const itemId = req.params.id;
@@ -357,9 +418,10 @@ module.exports = {
   createItem,
   getItems,
   getItemById,
+  getUserLikedItems, // NEW
   updateItem,
   deleteItem,
   moderateItem,
-  toggleLikeItem, // NEW
-  shareItem, // NEW
+  toggleLikeItem,
+  shareItem,
 };

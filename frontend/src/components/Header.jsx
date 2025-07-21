@@ -29,6 +29,7 @@ import {
   LogOut,
   Shield,
   MessageSquare,
+  Heart, // NEW
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -45,12 +46,14 @@ const Header = () => {
     await signOut();
     navigate("/");
   };
+
   const navigationItems = [
     { href: "/", label: "Home", icon: Home },
     { href: "/items", label: "Browse Items", icon: ShoppingBag },
     { href: "/add-item", label: "Add Item", icon: Plus, protected: true },
     { href: "/dashboard", label: "Dashboard", icon: User, protected: true },
     { href: "/swaps", label: "My Swaps", icon: MessageSquare, protected: true },
+    { href: "/liked", label: "Liked Items", icon: Heart, protected: true }, // NEW
     {
       href: "/admin",
       label: "Admin Panel",
@@ -155,6 +158,10 @@ const Header = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/swaps")}>
                     <MessageSquare className="mr-2 h-4 w-4" /> My Swaps
+                  </DropdownMenuItem>
+                  {/* 💖 NEW: Liked Items in dropdown */}
+                  <DropdownMenuItem onClick={() => navigate("/liked")}>
+                    <Heart className="mr-2 h-4 w-4" /> Liked Items
                   </DropdownMenuItem>
                   {isAdmin && (
                     <>
