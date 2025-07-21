@@ -92,7 +92,7 @@ app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
 });
 
-app.disable("etag"); // Disables ETag headers and 304 caching
+app.disable("etag"); 
 
 const PORT = process.env.PORT || 5000;
 
