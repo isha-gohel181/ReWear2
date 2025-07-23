@@ -23,6 +23,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import Loader from "@/components/shared/Loader";
+import ContactOwnerDialog from "@/components/ContactOwnerDialog";
 import {
   ArrowLeft,
   Heart,
@@ -507,10 +508,8 @@ const ItemDetailPage = () => {
                 </DialogContent>
               </Dialog>
 
-              <Button variant="ghost" className="w-full">
-                <MessageSquare className="h-4 w-4 mr-2" />
-                Contact Owner
-              </Button>
+              <ContactOwnerDialog item={item} owner={item.owner} />
+              
             </div>
           )}
 

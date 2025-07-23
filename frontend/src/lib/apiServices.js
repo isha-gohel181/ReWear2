@@ -51,3 +51,11 @@ export const adminService = {
   getStats: () => api.get("/admin/stats"),
   updateUserRole: (data) => api.post("/admin/user-role", data),
 };
+
+// 💬 Message Services
+export const messageService = {
+  sendMessage: (data) => api.post('/messages', data),
+  getMessages: (params) => api.get('/messages', { params }),
+  markAsRead: (messageId) => api.patch(`/messages/${messageId}/read`),
+  getUnreadCount: () => api.get('/messages/unread-count'),
+};

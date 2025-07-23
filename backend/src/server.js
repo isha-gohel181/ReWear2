@@ -14,6 +14,7 @@ const webhookRoutes = require("./routes/webhooks");
 const itemRoutes = require("./routes/items");
 const swapRoutes = require("./routes/swaps");
 const adminRoutes = require("./routes/admin");
+const messageRoutes = require("./routes/messages");
 
 const app = express();
 
@@ -65,6 +66,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/swaps", swapRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/messages", messageRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
