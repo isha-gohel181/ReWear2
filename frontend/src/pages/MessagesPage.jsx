@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquare, Mail, MailOpen, Eye } from "lucide-react";
+import { MessageSquare, Mail, MailOpen, Eye, Reply } from "lucide-react";
 import { messageService } from "@/lib/apiServices";
 import { toast } from "sonner";
 import Loader from "@/components/shared/Loader";
+import ReplyDialog from "@/components/ReplyDialog"; // NEW
 
 const MessagesPage = () => {
   const { user } = useUser();
@@ -40,6 +41,12 @@ const MessagesPage = () => {
     } catch (error) {
       console.error("Failed to fetch unread count:", error);
     }
+  };
+
+  // NEW: Handle reply sent - refresh messages and unread count
+  const handleReplySent = () => {
+    fetchMessages();
+    fetchUnreadCount();
   };
 
   const handleMarkAsRead = async (messageId, currentlyRead) => {
@@ -118,7 +125,7 @@ const MessagesPage = () => {
             messages.map((message) => (
               <Card
                 key={message._id}
-                className={`cursor-pointer transition-colors hover:bg-muted/50 ${
+                className={`transition-colors hover:bg-muted/50 ${
                   !message.isRead ? "border-l-4 border-l-blue-500" : ""
                 }`}
               >
@@ -167,6 +174,12 @@ const MessagesPage = () => {
                         New
                       </Badge>
                     )}
+                    {/* NEW: Show if it's a reply */}
+                    {message.subject.startsWith("Re: ") && (
+                      <Badge variant="outline" className="text-xs">
+                        Reply
+                      </Badge>
+                    )}
                   </div>
                   <p className="text-muted-foreground text-sm leading-relaxed">
                     {message.message}
@@ -188,6 +201,14 @@ const MessagesPage = () => {
                       </div>
                     </div>
                   )}
+
+                  {/* NEW: Reply button for received messages */}
+                  <div className="flex justify-end pt-2">
+                    <ReplyDialog
+                      originalMessage={message}
+                      onReplySent={handleReplySent}
+                    />
+                  </div>
                 </CardContent>
               </Card>
             ))
@@ -233,7 +254,15 @@ const MessagesPage = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <h4 className="font-medium">{message.subject}</h4>
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-medium">{message.subject}</h4>
+                    {/* NEW: Show if it's a reply in sent messages too */}
+                    {message.subject.startsWith("Re: ") && (
+                      <Badge variant="outline" className="text-xs">
+                        Reply
+                      </Badge>
+                    )}
+                  </div>
                   <p className="text-muted-foreground text-sm leading-relaxed">
                     {message.message}
                   </p>
