@@ -49,8 +49,8 @@ const messageController = {
       await newMessage.save();
 
       const populatedMessage = await Message.findById(newMessage._id)
-        .populate("from", "firstName lastName username profileImageUrl")
-        .populate("to", "firstName lastName username profileImageUrl")
+        .populate("from", "firstName lastName username profileImageUrl clerkId")
+        .populate("to", "firstName lastName username profileImageUrl clerkId")
         .populate("item", "title images category");
 
       res.status(201).json({
@@ -78,8 +78,8 @@ const messageController = {
       const query = type === "sent" ? { from: user._id } : { to: user._id };
 
       const messages = await Message.find(query)
-        .populate("from", "firstName lastName username profileImageUrl")
-        .populate("to", "firstName lastName username profileImageUrl")
+        .populate("from", "firstName lastName username profileImageUrl clerkId")
+        .populate("to", "firstName lastName username profileImageUrl clerkId")
         .populate("item", "title images category status")
         .sort({ createdAt: -1 })
         .limit(limit * 1)
