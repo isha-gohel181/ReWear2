@@ -1,5 +1,4 @@
-// frontend/src/components/Header.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   useUser,
@@ -29,9 +28,11 @@ import {
   LogOut,
   Shield,
   MessageSquare,
-  Heart, // NEW
+  Heart,
+  Mail, // NEW for messages
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { messageService } from "@/lib/apiServices";
 
 const Header = () => {
   const { user, isSignedIn } = useUser();
@@ -39,8 +40,28 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const isAdmin = user?.publicMetadata?.role === "admin";
+
+  // NEW: Fetch unread message count
+  useEffect(() => {
+    if (isSignedIn) {
+      const fetchUnreadCount = async () => {
+        try {
+          const response = await messageService.getUnreadCount();
+          setUnreadCount(response.data.unreadCount);
+        } catch (error) {
+          console.error("Failed to fetch unread count:", error);
+        }
+      };
+      fetchUnreadCount();
+
+      // Optional: Refresh count every 30 seconds
+      const interval = setInterval(fetchUnreadCount, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [isSignedIn]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -53,7 +74,8 @@ const Header = () => {
     { href: "/add-item", label: "Add Item", icon: Plus, protected: true },
     { href: "/dashboard", label: "Dashboard", icon: User, protected: true },
     { href: "/swaps", label: "My Swaps", icon: MessageSquare, protected: true },
-    { href: "/liked", label: "Liked Items", icon: Heart, protected: true }, // NEW
+    // { href: "/messages", label: "Messages", icon: Mail, protected: true },
+    { href: "/liked", label: "Liked Items", icon: Heart, protected: true },
     {
       href: "/admin",
       label: "Admin Panel",
@@ -94,11 +116,13 @@ const Header = () => {
             {visibleNavItems.map((item) => {
               const Icon = item.icon;
               const isActive = isActivePath(item.href);
+              const showBadge = item.href === "/messages" && unreadCount > 0; // NEW
+
               return (
                 <motion.div whileHover={{ scale: 1.05 }} key={item.href}>
                   <Link
                     to={item.href}
-                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors relative ${
                       isActive
                         ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:text-foreground hover:bg-accent"
@@ -109,6 +133,15 @@ const Header = () => {
                     {item.adminOnly && (
                       <Badge variant="secondary" className="ml-1 text-xs">
                         Admin
+                      </Badge>
+                    )}
+                    {/* NEW: Unread messages badge */}
+                    {showBadge && (
+                      <Badge
+                        variant="destructive"
+                        className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center"
+                      >
+                        {unreadCount > 99 ? "99+" : unreadCount}
                       </Badge>
                     )}
                   </Link>
@@ -158,6 +191,21 @@ const Header = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/swaps")}>
                     <MessageSquare className="mr-2 h-4 w-4" /> My Swaps
+                  </DropdownMenuItem>
+                  {/* NEW: Messages dropdown item with badge */}
+                  <DropdownMenuItem
+                    onClick={() => navigate("/messages")}
+                    className="relative"
+                  >
+                    <Mail className="mr-2 h-4 w-4" /> Messages
+                    {unreadCount > 0 && (
+                      <Badge
+                        variant="destructive"
+                        className="ml-auto h-5 w-5 p-0 text-xs flex items-center justify-center"
+                      >
+                        {unreadCount > 99 ? "99+" : unreadCount}
+                      </Badge>
+                    )}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/liked")}>
                     <Heart className="mr-2 h-4 w-4" /> Liked Items
@@ -213,12 +261,15 @@ const Header = () => {
                 {visibleNavItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = isActivePath(item.href);
+                  const showBadge =
+                    item.href === "/messages" && unreadCount > 0; // NEW
+
                   return (
                     <Link
                       key={item.href}
                       to={item.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors relative ${
                         isActive
                           ? "bg-primary text-primary-foreground"
                           : "text-muted-foreground hover:text-foreground hover:bg-accent"
@@ -229,6 +280,15 @@ const Header = () => {
                       {item.adminOnly && (
                         <Badge variant="secondary" className="text-xs">
                           Admin
+                        </Badge>
+                      )}
+                      {/* NEW: Mobile unread messages badge */}
+                      {showBadge && (
+                        <Badge
+                          variant="destructive"
+                          className="ml-auto h-5 w-5 p-0 text-xs flex items-center justify-center"
+                        >
+                          {unreadCount > 99 ? "99+" : unreadCount}
                         </Badge>
                       )}
                     </Link>

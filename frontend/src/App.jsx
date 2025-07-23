@@ -17,6 +17,7 @@ import ProfilePage from "@/pages/ProfilePage";
 import AdminDashboard from "./pages/AdminDashboard";
 import LikedItemsPage from "./pages/LikedItemsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import MessagesPage from "@/pages/MessagesPage";
 
 function App() {
   return (
@@ -87,6 +88,8 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            <Route path="/messages" element={<MessagesPage />} />
 
             {/* Fallback for protected routes */}
             <Route
