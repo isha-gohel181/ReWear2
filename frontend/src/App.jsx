@@ -1,6 +1,11 @@
-//frontend/src/App.jsx
+// frontend/src/App.jsx
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
 import { Toaster } from "sonner";
 
@@ -19,101 +24,110 @@ import LikedItemsPage from "./pages/LikedItemsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MessagesPage from "@/pages/MessagesPage";
 
+function AppContent() {
+  const location = useLocation();
+  const isLanding = location.pathname === "/";
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className={isLanding ? "" : "container mx-auto px-4 py-8"}>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/items" element={<ItemsPage />} />
+          <Route path="/items/:id" element={<ItemDetailPage />} />
+
+          {/* Protected routes */}
+          <Route
+            path="/add-item"
+            element={
+              <ProtectedRoute>
+                <AddItemPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/items/:id/edit"
+            element={
+              <ProtectedRoute>
+                <EditItemPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/swaps"
+            element={
+              <ProtectedRoute>
+                <SwapsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/liked"
+            element={
+              <ProtectedRoute>
+                <LikedItemsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/messages" element={<MessagesPage />} />
+
+          {/* Fallback for protected routes */}
+          <Route
+            path="*"
+            element={
+              <>
+                <SignedIn>
+                  <div className="text-center">
+                    <h1 className="text-2xl font-bold">Page Not Found</h1>
+                    <p className="text-muted-foreground">
+                      The page you're looking for doesn't exist.
+                    </p>
+                  </div>
+                </SignedIn>
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              </>
+            }
+          />
+        </Routes>
+      </main>
+      <Toaster />
+    </div>
+  );
+}
+
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="container mx-auto px-4 py-8">
-          <Routes>
-            {/* Public routes */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/items" element={<ItemsPage />} />
-            <Route path="/items/:id" element={<ItemDetailPage />} />
-
-            {/* Protected routes */}
-            <Route
-              path="/add-item"
-              element={
-                <ProtectedRoute>
-                  <AddItemPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/items/:id/edit"
-              element={
-                <ProtectedRoute>
-                  <EditItemPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/swaps"
-              element={
-                <ProtectedRoute>
-                  <SwapsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <ProfilePage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/liked"
-              element={
-                <ProtectedRoute>
-                  <LikedItemsPage />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route path="/messages" element={<MessagesPage />} />
-
-            {/* Fallback for protected routes */}
-            <Route
-              path="*"
-              element={
-                <>
-                  <SignedIn>
-                    <div className="text-center">
-                      <h1 className="text-2xl font-bold">Page Not Found</h1>
-                      <p className="text-muted-foreground">
-                        The page you're looking for doesn't exist.
-                      </p>
-                    </div>
-                  </SignedIn>
-                  <SignedOut>
-                    <RedirectToSignIn />
-                  </SignedOut>
-                </>
-              }
-            />
-          </Routes>
-        </main>
-        <Toaster />
-      </div>
+      <AppContent />
     </Router>
   );
 }

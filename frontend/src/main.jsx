@@ -15,7 +15,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <ClerkProvider
       publishableKey={PUBLISHABLE_KEY}
       navigate={(to) => window.history.pushState(null, "", to)}
-      forceRedirectUrl="/" // ✅ force redirect to homepage after sign in/up
+      forceRedirectUrl="/"
     >
       <App />
     </ClerkProvider>
