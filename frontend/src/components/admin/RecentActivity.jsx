@@ -1,3 +1,4 @@
+//frontend/src/components/admin/RecentActivity.jsx
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import {
