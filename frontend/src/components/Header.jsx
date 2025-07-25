@@ -29,7 +29,7 @@ import {
   Shield,
   MessageSquare,
   Heart,
-  Mail, // NEW for messages
+  Mail,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { messageService } from "@/lib/apiServices";
@@ -44,7 +44,7 @@ const Header = () => {
 
   const isAdmin = user?.publicMetadata?.role === "admin";
 
-  // NEW: Fetch unread message count
+  // Fetch unread message count
   useEffect(() => {
     if (isSignedIn) {
       const fetchUnreadCount = async () => {
@@ -57,7 +57,7 @@ const Header = () => {
       };
       fetchUnreadCount();
 
-      // Optional: Refresh count every 30 seconds
+      // Refresh count every 30 seconds
       const interval = setInterval(fetchUnreadCount, 30000);
       return () => clearInterval(interval);
     }
@@ -135,7 +135,7 @@ const Header = () => {
                         Admin
                       </Badge>
                     )}
-                    {/* NEW: Unread messages badge */}
+                    {/* Unread messages badge */}
                     {showBadge && (
                       <Badge
                         variant="destructive"
@@ -192,7 +192,7 @@ const Header = () => {
                   <DropdownMenuItem onClick={() => navigate("/swaps")}>
                     <MessageSquare className="mr-2 h-4 w-4" /> My Swaps
                   </DropdownMenuItem>
-                  {/* NEW: Messages dropdown item with badge */}
+                  {/* Messages dropdown item with badge */}
                   <DropdownMenuItem
                     onClick={() => navigate("/messages")}
                     className="relative"
@@ -282,7 +282,7 @@ const Header = () => {
                           Admin
                         </Badge>
                       )}
-                      {/* NEW: Mobile unread messages badge */}
+                      {/* Mobile unread messages badge */}
                       {showBadge && (
                         <Badge
                           variant="destructive"

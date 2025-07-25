@@ -9,7 +9,7 @@ import { MessageSquare, Mail, MailOpen, Eye, Reply } from "lucide-react";
 import { messageService } from "@/lib/apiServices";
 import { toast } from "sonner";
 import Loader from "@/components/shared/Loader";
-import ReplyDialog from "@/components/ReplyDialog"; // NEW
+import ReplyDialog from "@/components/ReplyDialog"; 
 
 const MessagesPage = () => {
   const { user } = useUser();
@@ -43,7 +43,7 @@ const MessagesPage = () => {
     }
   };
 
-  // NEW: Handle reply sent - refresh messages and unread count
+  // Handle reply sent - refresh messages and unread count
   const handleReplySent = () => {
     fetchMessages();
     fetchUnreadCount();
@@ -174,7 +174,7 @@ const MessagesPage = () => {
                         New
                       </Badge>
                     )}
-                    {/* NEW: Show if it's a reply */}
+                    {/* Show if it's a reply */}
                     {message.subject.startsWith("Re: ") && (
                       <Badge variant="outline" className="text-xs">
                         Reply
@@ -202,7 +202,7 @@ const MessagesPage = () => {
                     </div>
                   )}
 
-                  {/* NEW: Reply button for received messages */}
+                  {/* Reply button for received messages */}
                   <div className="flex justify-end pt-2">
                     <ReplyDialog
                       originalMessage={message}
@@ -256,7 +256,7 @@ const MessagesPage = () => {
                 <CardContent className="space-y-3">
                   <div className="flex items-center gap-2">
                     <h4 className="font-medium">{message.subject}</h4>
-                    {/* NEW: Show if it's a reply in sent messages too */}
+                    {/* Show if it's a reply in sent messages too */}
                     {message.subject.startsWith("Re: ") && (
                       <Badge variant="outline" className="text-xs">
                         Reply
