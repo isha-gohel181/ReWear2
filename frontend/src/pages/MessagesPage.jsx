@@ -1,3 +1,4 @@
+//frontend/src/pages/MessagesPage.jsx
 import React, { useState, useEffect } from "react";
 import { useUser } from "@clerk/clerk-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
