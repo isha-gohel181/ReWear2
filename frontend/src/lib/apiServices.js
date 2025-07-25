@@ -29,11 +29,11 @@ export const itemService = {
     }),
   deleteItem: (id) => api.delete(`/items/${id}`),
   moderateItem: (data) => api.post("/items/moderate", data),
-  // 👍 Like functionality
+  //  Like functionality
   toggleLike: (id) => api.post(`/items/${id}/like`),
-  // 📤 Share functionality
+  //  Share functionality
   shareItem: (id) => api.post(`/items/${id}/share`),
-  // 💖 NEW: Get liked items
+  //  Get liked items
   getLikedItems: (params) => api.get("/items/user/liked", { params }),
 };
 
