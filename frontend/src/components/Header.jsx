@@ -31,6 +31,7 @@ import {
   MessageSquare,
   Heart,
   Mail,
+  Recycle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { messageService } from "@/lib/apiServices";
@@ -106,9 +107,9 @@ const Header = () => {
             <motion.div
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
-              className="h-8 w-8 rounded-full bg-green-600 flex items-center justify-center"
+              className="h-8 w-8 rounded-full flex items-center justify-center"
             >
-              <span className="text-white font-bold text-sm">R</span>
+              <Recycle className="h-12 w-12 text-green-600" />
             </motion.div>
             <span className="font-bold text-xl text-green-600">ReWear</span>
           </Link>
