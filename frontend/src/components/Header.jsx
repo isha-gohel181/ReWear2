@@ -109,7 +109,7 @@ const Header = () => {
               animate={{ scale: 1 }}
               className="h-8 w-8 rounded-full flex items-center justify-center"
             >
-              <Recycle className="h-12 w-12 text-green-600" />
+              <Recycle className="h-12 w-12 text-green-600 hover:animate-spin-slow transition-transform" />
             </motion.div>
             <span className="font-bold text-xl text-green-600">ReWear</span>
           </Link>
