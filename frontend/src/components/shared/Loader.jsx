@@ -1,4 +1,4 @@
-// src/components/shared/Loader.jsx
+//frontend/src/components/shared/Loader.jsx
 import React from "react";
 import { Loader2 } from "lucide-react";
 
