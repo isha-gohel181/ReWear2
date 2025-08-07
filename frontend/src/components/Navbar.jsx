@@ -1,4 +1,5 @@
 // frontend/src/components/Navbar.jsx
+
 import {
   SignedIn,
   SignedOut,
