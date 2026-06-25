@@ -1116,15 +1116,9 @@ const LandingPage = () => {
               </motion.div>
             </div>
 
-            {/* Right Column: Premium Glassmorphism Canvas */}
+            {/* Right Column: Floating Cards Canvas */}
             <div className="lg:col-span-5 w-full flex justify-center items-center">
-              <div className="relative w-full max-w-[390px] xl:max-w-[430px] aspect-[4/5] sm:aspect-square md:aspect-[4/5] lg:aspect-[4/5] bg-white/30 backdrop-blur-md border border-white/40 rounded-[2.5rem] shadow-2xl shadow-green-900/5 p-5 overflow-hidden flex items-center justify-center">
-                {/* Radial glow background inside canvas */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-green-300/10 via-transparent to-blue-300/10 pointer-events-none" />
-                
-                {/* Light subtle glow spots inside canvas */}
-                <div className="absolute top-10 left-10 w-32 h-32 bg-green-200/15 rounded-full filter blur-2xl pointer-events-none" />
-                <div className="absolute bottom-10 right-10 w-32 h-32 bg-blue-200/15 rounded-full filter blur-2xl pointer-events-none" />
+              <div className="relative w-full max-w-[390px] xl:max-w-[430px] aspect-[4/5] sm:aspect-square md:aspect-[4/5] lg:aspect-[4/5] flex items-center justify-center">
 
                 {/* SVG Swap Connectors */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 100 100" preserveAspectRatio="none">
