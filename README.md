@@ -152,7 +152,7 @@ Ensure you have the following accounts set up:
 
 ---
 
-### 2. Backend Configuration
+### 2. Backend Setup
 1. Navigate to the backend directory:
    ```bash
    cd backend
@@ -161,25 +161,14 @@ Ensure you have the following accounts set up:
    ```bash
    npm install
    ```
-3. Create a `.env` file in the `backend/` folder. Here are the environment variables used and their purposes:
-   * `PORT`: The local port number on which the backend server runs (typically `5000`).
-   * `MONGODB_URI`: The MongoDB connection string (local URI or Atlas URI) used to connect database schemas for user profiles, items, and swap logs.
-   * `CLERK_PUBLISHABLE_KEY`: The public API key from your Clerk dashboard, used to verify client-side sessions.
-   * `CLERK_SECRET_KEY`: The secret API key from your Clerk dashboard, used to make authenticated backend calls to Clerk API endpoints.
-   * `CLERK_WEBHOOK_SECRET`: The cryptographic SVIX webhook secret key used to verify user sync webhooks triggered by Clerk user events.
-   * `CLOUDINARY_CLOUD_NAME`: Your Cloudinary cloud storage name, used for routing fashion listing image uploads.
-   * `CLOUDINARY_API_KEY`: Your Cloudinary API key, used to authenticate asset upload requests.
-   * `CLOUDINARY_API_SECRET`: Your Cloudinary API secret key, used to sign uploaded assets securely.
-   * `FRONTEND_URL`: The domain URL of the client application (e.g. `http://localhost:5173`) to configure backend CORS middleware policies.
-
-4. Run in development mode:
+3. Run in development mode:
    ```bash
    npm run dev
    ```
 
 ---
 
-### 3. Frontend Configuration
+### 3. Frontend Setup
 1. Navigate to the frontend directory:
    ```bash
    cd ../frontend
@@ -188,11 +177,7 @@ Ensure you have the following accounts set up:
    ```bash
    npm install
    ```
-3. Create a `.env` file in the `frontend/` folder. Here are the environment variables used and their purposes:
-   * `VITE_CLERK_PUBLISHABLE_KEY`: The public API key from your Clerk dashboard, used to initialize Clerk context on the client application.
-   * `VITE_API_URL`: The absolute backend server endpoint base URL (e.g. `http://localhost:5000/api`) used by Axios to query MERN endpoints.
-
-4. Start the Vite server:
+3. Start the Vite server:
    ```bash
    npm run dev
    ```
